@@ -1,7 +1,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { motion } from "framer-motion";
 
 export interface HeroSectionProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
@@ -10,12 +9,6 @@ export interface HeroSectionProps extends Omit<React.HTMLAttributes<HTMLDivEleme
   subtitle: string;
   infoBadgeText: string;
   ctaButtonText: string;
-  socialProofText: string;
-  avatars: {
-    src: string;
-    alt: string;
-    fallback: string;
-  }[];
 }
 
 const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
@@ -27,8 +20,6 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
       subtitle,
       infoBadgeText,
       ctaButtonText,
-      socialProofText,
-      avatars,
       ...props
     },
     ref
@@ -90,31 +81,18 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
           </p>
         </div>
 
+        {/* Badge */}
+        <div className="mt-10 inline-flex items-center rounded-lg bg-secondary text-foreground px-4 py-2 text-sm font-medium border border-primary shadow-sm">
+          {infoBadgeText}
+        </div>
+
         {/* CTA */}
         <Button
           size="lg"
-          className="mt-10 px-10 py-6 text-lg bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-xl shadow-md transition-all hover:scale-105"
+          className="mt-6 px-10 py-6 text-lg bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-xl shadow-md transition-all hover:scale-105"
         >
           {ctaButtonText}
         </Button>
-
-        {/* Social Proof */}
-        <div className="mt-6 flex items-center justify-center flex-wrap gap-4">
-          <div className="flex -space-x-4">
-            {avatars.map((avatar, index) => (
-              <Avatar
-                key={index}
-                className="border-2 border-background shadow-sm"
-              >
-                <AvatarImage src={avatar.src} alt={avatar.alt} />
-                <AvatarFallback>{avatar.fallback}</AvatarFallback>
-              </Avatar>
-            ))}
-          </div>
-          <p className="text-sm font-medium text-muted-foreground">
-            {socialProofText}
-          </p>
-        </div>
 
         {/* Glassy Onboarding Form */}
         <motion.form
