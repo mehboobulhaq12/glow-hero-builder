@@ -1,8 +1,26 @@
 import { HeroSection } from "@/components/HeroSection";
+import { Banner } from "@/components/ui/banner";
+import { ArrowRight } from "lucide-react";
 
 const Index = () => {
   return (
-    <div className="w-full bg-canvas-yellow min-h-screen">
+    <div className="w-full min-h-screen">
+      {/* Announcement Banner */}
+      <Banner className="bg-primary text-white py-3">
+        <div className="w-full">
+          <p className="flex justify-center text-sm font-medium">
+            <span className="flex items-center gap-2 flex-wrap justify-center">
+              <span>Step 1: Fill out the onboarding form</span>
+              <ArrowRight size={16} className="shrink-0" />
+              <span>Step 2: Book your discovery call</span>
+              <ArrowRight size={16} className="shrink-0" />
+              <span>Step 3: Get your free growth playbook</span>
+            </span>
+          </p>
+        </div>
+      </Banner>
+      
+      <div className="bg-canvas-yellow">
       <HeroSection
         title={
           <>
@@ -15,6 +33,7 @@ const Index = () => {
         infoBadgeText="42% average increase in conversion rate after fixing listing fundamentals."
         ctaButtonText="Upgrade My Conversions"
       />
+      </div>
     </div>
   );
 };

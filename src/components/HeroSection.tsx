@@ -62,8 +62,8 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
           className
         )}
       >
-        {/* Top Yellow Glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[90%] h-40 bg-gradient-to-b from-yellow-300/40 via-yellow-200/10 to-transparent blur-2xl rounded-full pointer-events-none"></div>
+        {/* Top Yellow Glow - Animated */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[90%] h-60 bg-gradient-to-b from-primary/60 via-primary/20 to-transparent blur-3xl rounded-full pointer-events-none animate-pulse"></div>
 
         <div className="relative z-10 max-w-4xl">
           {/* Headline */}
