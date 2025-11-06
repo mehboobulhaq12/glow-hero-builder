@@ -1,12 +1,40 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { HeroSection } from "@/components/HeroSection";
 
 const Index = () => {
+  const avatarData = [
+    {
+      src: "https://i.pravatar.cc/150?img=1",
+      alt: "Amazon Seller 1",
+      fallback: "AS",
+    },
+    {
+      src: "https://i.pravatar.cc/150?img=2",
+      alt: "Amazon Seller 2",
+      fallback: "BS",
+    },
+    {
+      src: "https://i.pravatar.cc/150?img=3",
+      alt: "Amazon Seller 3",
+      fallback: "CS",
+    },
+  ];
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="w-full bg-canvas-yellow min-h-screen">
+      <HeroSection
+        title={
+          <>
+            What's the single thing stopping your <br /> Amazon{" "}
+            <span className="text-primary">growth?</span>
+          </>
+        }
+        animatedTexts={["traffic", "conversion", "reviews", "growth"]}
+        subtitle="Tell us the product and one problem you see (traffic, conversion, reviews, or something else). We'll run a focused diagnostic and return 3 prioritized findings and one immediate fix you can use this week — no agency pitch, just a clear path forward."
+        infoBadgeText="42% average increase in conversion rate after fixing listing fundamentals."
+        ctaButtonText="Upgrade My Conversions"
+        socialProofText="More than 100,000+ sellers improved with Ecomera"
+        avatars={avatarData}
+      />
     </div>
   );
 };
