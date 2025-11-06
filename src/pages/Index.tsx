@@ -29,8 +29,8 @@ const Index = () => {
           </>
         }
         animatedTexts={["traffic", "conversion", "reviews", "growth"]}
-        subtitle="Tell us the product and one problem you see (traffic, conversion, reviews, or something else). We'll run a focused diagnostic and return 3 prioritized findings and one immediate fix you can use this week — no agency pitch, just a clear path forward."
-        infoBadgeText="42% average increase in conversion rate after fixing listing fundamentals."
+        subtitle="Tell us your product and one problem you're facing (traffic, conversion, reviews). We'll run a quick diagnostic and share 3 key findings + one fix you can apply this week."
+        infoBadgeText=""
         ctaButtonText="Upgrade My Conversions"
         socialProofText="More than 100,000+ sellers improved with Ecomera"
         avatars={avatarData}

@@ -76,29 +76,24 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
 
         <div className="relative z-10 max-w-4xl">
           {/* Headline */}
-          <h1 className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl">
+          <h1 className="text-4xl font-medium tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl leading-tight">
             {title}
-            <span className="block mt-2 text-primary">
+            <span className="block mt-3 text-primary">
               {displayText}
               <span className="animate-pulse">|</span>
             </span>
           </h1>
 
           {/* Subtitle */}
-          <p className="mt-6 text-lg leading-8 text-muted-foreground max-w-2xl mx-auto">
+          <p className="mt-8 text-lg leading-relaxed text-muted-foreground max-w-2xl mx-auto font-light">
             {subtitle}
           </p>
-        </div>
-
-        {/* Badge */}
-        <div className="mt-10 inline-flex items-center rounded-lg bg-secondary text-foreground px-4 py-2 text-sm font-medium border border-primary shadow-sm">
-          {infoBadgeText}
         </div>
 
         {/* CTA */}
         <Button
           size="lg"
-          className="mt-6 px-10 py-6 text-lg bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-xl shadow-md transition-all hover:scale-105"
+          className="mt-10 px-10 py-6 text-lg bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-xl shadow-md transition-all hover:scale-105"
         >
           {ctaButtonText}
         </Button>
