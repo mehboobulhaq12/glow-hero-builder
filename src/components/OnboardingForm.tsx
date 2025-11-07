@@ -8,8 +8,36 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { UserRound, BarChart2, AlertCircle, Target } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { z } from "zod";
+
+// Validation schemas for each step
+const step1Schema = z.object({
+  name: z.string().trim().min(1, "Name is required").max(100),
+  email: z.string().trim().email("Invalid email address").max(255),
+  brandName: z.string().trim().min(1, "Brand name is required").max(100),
+  websiteLink: z.string().trim().max(255).optional(),
+  sellingPlatform: z.string().min(1, "Please select where you sell"),
+});
+
+const step2Schema = z.object({
+  revenueRange: z.string().min(1, "Please select your revenue range"),
+  runsAds: z.string().min(1, "Please select if you run ads"),
+  sellingDuration: z.string().min(1, "Please select how long you've been selling"),
+});
+
+const step3Schema = z.object({
+  mainProblem: z.string().min(1, "Please select your main problem"),
+  problemDescription: z.string().trim().min(1, "Please describe your issue").max(500),
+});
+
+const step4Schema = z.object({
+  desiredOutcome: z.string().min(1, "Please select your desired outcome"),
+  asinLink: z.string().trim().max(255).optional(),
+});
 
 export const OnboardingForm = () => {
+  const { toast } = useToast();
   const [currentStep, setCurrentStep] = React.useState(1);
   const [formData, setFormData] = React.useState({
     name: "",
@@ -28,12 +56,56 @@ export const OnboardingForm = () => {
 
   const totalSteps = 4;
 
+  const validateStep = (step: number): boolean => {
+    try {
+      if (step === 1) {
+        step1Schema.parse({
+          name: formData.name,
+          email: formData.email,
+          brandName: formData.brandName,
+          websiteLink: formData.websiteLink,
+          sellingPlatform: formData.sellingPlatform,
+        });
+      } else if (step === 2) {
+        step2Schema.parse({
+          revenueRange: formData.revenueRange,
+          runsAds: formData.runsAds,
+          sellingDuration: formData.sellingDuration,
+        });
+      } else if (step === 3) {
+        step3Schema.parse({
+          mainProblem: formData.mainProblem,
+          problemDescription: formData.problemDescription,
+        });
+      } else if (step === 4) {
+        step4Schema.parse({
+          desiredOutcome: formData.desiredOutcome,
+          asinLink: formData.asinLink,
+        });
+      }
+      return true;
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        toast({
+          variant: "destructive",
+          title: "Validation Error",
+          description: error.errors[0].message,
+        });
+      }
+      return false;
+    }
+  };
+
   const handleNext = () => {
     if (currentStep < totalSteps) {
-      setCurrentStep(currentStep + 1);
+      if (validateStep(currentStep)) {
+        setCurrentStep(currentStep + 1);
+      }
     } else {
-      // Submit form
-      setCurrentStep(5); // Thank you screen
+      if (validateStep(currentStep)) {
+        // Submit form
+        setCurrentStep(5); // Thank you screen
+      }
     }
   };
 
@@ -49,6 +121,28 @@ export const OnboardingForm = () => {
 
   return (
     <div className="w-full max-w-xl mx-auto">
+      {/* Progress Indicator */}
+      {currentStep <= totalSteps && (
+        <div className="mb-6 text-center">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            {[...Array(totalSteps)].map((_, index) => (
+              <div
+                key={index}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  index + 1 === currentStep
+                    ? "w-8 bg-primary"
+                    : index + 1 < currentStep
+                    ? "w-2 bg-primary"
+                    : "w-2 bg-muted"
+                }`}
+              />
+            ))}
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Step {currentStep} of {totalSteps}
+          </p>
+        </div>
+      )}
       <AnimatePresence mode="wait">
         {currentStep === 1 && (
           <motion.div
