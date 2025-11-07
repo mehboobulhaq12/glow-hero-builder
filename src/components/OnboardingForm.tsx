@@ -48,7 +48,7 @@ export const OnboardingForm = () => {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto">
+    <div className="w-full max-w-xl mx-auto">
       <AnimatePresence mode="wait">
         {currentStep === 1 && (
           <motion.div
