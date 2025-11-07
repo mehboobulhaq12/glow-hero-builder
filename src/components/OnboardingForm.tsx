@@ -48,7 +48,7 @@ export const OnboardingForm = () => {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto">
+    <div className="w-full max-w-md mx-auto">
       <AnimatePresence mode="wait">
         {currentStep === 1 && (
           <motion.div
@@ -59,15 +59,15 @@ export const OnboardingForm = () => {
             transition={{ duration: 0.3 }}
           >
             <Card className="bg-card/60 backdrop-blur-md border border-primary shadow-lg">
-              <CardHeader>
+              <CardHeader className="text-left">
                 <CardTitle className="flex items-center gap-3 text-2xl">
                   <UserRound className="w-6 h-6 text-primary" />
                   Seller Information
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Your Name</Label>
+                <div className="space-y-2 text-left">
+                  <Label htmlFor="name" className="text-left">Your Name</Label>
                   <Input
                     id="name"
                     value={formData.name}
@@ -76,8 +76,8 @@ export const OnboardingForm = () => {
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                <div className="space-y-2 text-left">
+                  <Label htmlFor="email" className="text-left">Email</Label>
                   <Input
                     id="email"
                     type="email"
@@ -87,8 +87,8 @@ export const OnboardingForm = () => {
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="brandName">Brand Name</Label>
+                <div className="space-y-2 text-left">
+                  <Label htmlFor="brandName" className="text-left">Brand Name</Label>
                   <Input
                     id="brandName"
                     value={formData.brandName}
@@ -97,8 +97,8 @@ export const OnboardingForm = () => {
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="websiteLink">Website Link</Label>
+                <div className="space-y-2 text-left">
+                  <Label htmlFor="websiteLink" className="text-left">Website Link</Label>
                   <Input
                     id="websiteLink"
                     value={formData.websiteLink}
@@ -107,8 +107,8 @@ export const OnboardingForm = () => {
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="sellingPlatform">Where do you sell?</Label>
+                <div className="space-y-2 text-left">
+                  <Label htmlFor="sellingPlatform" className="text-left">Where do you sell?</Label>
                   <Select value={formData.sellingPlatform} onValueChange={(value) => updateFormData("sellingPlatform", value)}>
                     <SelectTrigger id="sellingPlatform">
                       <SelectValue placeholder="Select platform" />
@@ -142,15 +142,15 @@ export const OnboardingForm = () => {
             transition={{ duration: 0.3 }}
           >
             <Card className="bg-card/60 backdrop-blur-md border border-primary shadow-lg">
-              <CardHeader>
+              <CardHeader className="text-left">
                 <CardTitle className="flex items-center gap-3 text-2xl">
                   <BarChart2 className="w-6 h-6 text-primary" />
                   Current Amazon Status
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="space-y-3">
-                  <Label>What is your current average monthly revenue range?</Label>
+                <div className="space-y-3 text-left">
+                  <Label className="text-left">What is your current average monthly revenue range?</Label>
                   <RadioGroup value={formData.revenueRange} onValueChange={(value) => updateFormData("revenueRange", value)}>
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="below-10k" id="below-10k" />
@@ -171,8 +171,8 @@ export const OnboardingForm = () => {
                   </RadioGroup>
                 </div>
 
-                <div className="space-y-3">
-                  <Label>Do you currently run ads?</Label>
+                <div className="space-y-3 text-left">
+                  <Label className="text-left">Do you currently run ads?</Label>
                   <RadioGroup value={formData.runsAds} onValueChange={(value) => updateFormData("runsAds", value)}>
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="yes" id="ads-yes" />
@@ -185,8 +185,8 @@ export const OnboardingForm = () => {
                   </RadioGroup>
                 </div>
 
-                <div className="space-y-3">
-                  <Label>How long have you been selling on Amazon?</Label>
+                <div className="space-y-3 text-left">
+                  <Label className="text-left">How long have you been selling on Amazon?</Label>
                   <RadioGroup value={formData.sellingDuration} onValueChange={(value) => updateFormData("sellingDuration", value)}>
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="less-6mo" id="less-6mo" />
@@ -229,15 +229,15 @@ export const OnboardingForm = () => {
             transition={{ duration: 0.3 }}
           >
             <Card className="bg-card/60 backdrop-blur-md border border-primary shadow-lg">
-              <CardHeader>
+              <CardHeader className="text-left">
                 <CardTitle className="flex items-center gap-3 text-2xl">
                   <AlertCircle className="w-6 h-6 text-primary" />
                   What's Your Biggest Bottleneck?
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="mainProblem">What's the #1 problem hurting your growth?</Label>
+                <div className="space-y-2 text-left">
+                  <Label htmlFor="mainProblem" className="text-left">What's the #1 problem hurting your growth?</Label>
                   <Select value={formData.mainProblem} onValueChange={(value) => updateFormData("mainProblem", value)}>
                     <SelectTrigger id="mainProblem">
                       <SelectValue placeholder="Select your main problem" />
@@ -253,8 +253,8 @@ export const OnboardingForm = () => {
                   </Select>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="problemDescription">Short note: Describe this issue in 1–2 lines</Label>
+                <div className="space-y-2 text-left">
+                  <Label htmlFor="problemDescription" className="text-left">Short note: Describe this issue in 1–2 lines</Label>
                   <Textarea
                     id="problemDescription"
                     value={formData.problemDescription}
@@ -286,15 +286,15 @@ export const OnboardingForm = () => {
             transition={{ duration: 0.3 }}
           >
             <Card className="bg-card/60 backdrop-blur-md border border-primary shadow-lg">
-              <CardHeader>
+              <CardHeader className="text-left">
                 <CardTitle className="flex items-center gap-3 text-2xl">
                   <Target className="w-6 h-6 text-primary" />
                   What Result Do You Want Next?
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="space-y-3">
-                  <Label>What is the outcome that matters most to you right now?</Label>
+                <div className="space-y-3 text-left">
+                  <Label className="text-left">What is the outcome that matters most to you right now?</Label>
                   <RadioGroup value={formData.desiredOutcome} onValueChange={(value) => updateFormData("desiredOutcome", value)}>
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="sales-velocity" id="sales-velocity" />
@@ -319,8 +319,8 @@ export const OnboardingForm = () => {
                   </RadioGroup>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="asinLink">Optional ASIN or Amazon product link</Label>
+                <div className="space-y-2 text-left">
+                  <Label htmlFor="asinLink" className="text-left">Optional ASIN or Amazon product link</Label>
                   <Input
                     id="asinLink"
                     value={formData.asinLink}
