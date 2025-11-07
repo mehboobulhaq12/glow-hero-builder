@@ -3,12 +3,13 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 
-export interface HeroSectionProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title'> {
+export interface HeroSectionProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title' | 'children'> {
   title: React.ReactNode;
   animatedTexts: string[];
   subtitle: string;
   infoBadgeText: string;
   ctaButtonText: string;
+  children?: React.ReactNode;
 }
 
 const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
@@ -20,6 +21,7 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
       subtitle,
       infoBadgeText,
       ctaButtonText,
+      children,
       ...props
     },
     ref
@@ -94,32 +96,8 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
           {ctaButtonText}
         </Button>
 
-        {/* Glassy Onboarding Form */}
-        <motion.form
-          initial={{ opacity: 0, y: 50 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="mt-12 w-full max-w-md mx-auto bg-card/60 backdrop-blur-md border border-primary rounded-2xl shadow-lg p-6 flex flex-col gap-4"
-        >
-          <input
-            type="text"
-            placeholder="Product Name"
-            className="border border-input rounded-md px-4 py-2 focus:ring-2 focus:ring-ring outline-none bg-background"
-          />
-          <input
-            type="text"
-            placeholder="Primary Problem (traffic, conversion, etc.)"
-            className="border border-input rounded-md px-4 py-2 focus:ring-2 focus:ring-ring outline-none bg-background"
-          />
-          <input
-            type="email"
-            placeholder="Email Address"
-            className="border border-input rounded-md px-4 py-2 focus:ring-2 focus:ring-ring outline-none bg-background"
-          />
-          <Button className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 rounded-xl">
-            Next →
-          </Button>
-        </motion.form>
+        {/* Multi-step Onboarding Form */}
+        {children}
       </section>
     );
   }

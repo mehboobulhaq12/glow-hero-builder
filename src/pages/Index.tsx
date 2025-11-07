@@ -1,4 +1,5 @@
 import { HeroSection } from "@/components/HeroSection";
+import { OnboardingForm } from "@/components/OnboardingForm";
 import { Banner } from "@/components/ui/banner";
 import { ArrowRight } from "lucide-react";
 
@@ -32,7 +33,11 @@ const Index = () => {
         subtitle="Tell us your product and one problem you're facing (traffic, conversion, reviews). We'll run a quick diagnostic and share 3 key findings + one fix you can apply this week."
         infoBadgeText="42% average increase in conversion rate after fixing listing fundamentals."
         ctaButtonText="Upgrade My Conversions"
-      />
+      >
+        <div className="mt-12">
+          <OnboardingForm />
+        </div>
+      </HeroSection>
       </div>
     </div>
   );
