@@ -453,8 +453,14 @@ export const OnboardingForm = () => {
                     We'll review your information and send your initial diagnostic + next steps soon. No pitch — only clarity on what to fix first.
                   </p>
                 </div>
-                <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground mt-4">
-                  You can now book your call
+                <Button 
+                  size="lg" 
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground mt-4"
+                  asChild
+                >
+                  <a href="https://calendar.notion.so/meet/murtazahamza/kwel3pyw" target="_blank" rel="noopener noreferrer">
+                    You can now book your call
+                  </a>
                 </Button>
               </CardContent>
             </Card>
