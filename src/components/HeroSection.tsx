@@ -92,8 +92,11 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
         <Button
           size="lg"
           className="mt-6 px-10 py-6 text-lg bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-xl shadow-md transition-all hover:scale-105"
+          asChild
         >
-          {ctaButtonText}
+          <a href="https://calendar.notion.so/meet/murtazahamza/kwel3pyw" target="_blank" rel="noopener noreferrer">
+            {ctaButtonText}
+          </a>
         </Button>
 
         {/* Multi-step Onboarding Form */}
