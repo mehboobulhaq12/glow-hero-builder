@@ -126,7 +126,7 @@ export const OnboardingForm = () => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto">
+    <div className="w-full max-w-6xl mx-auto">
       {/* Progress Indicator */}
       {currentStep <= totalSteps && (
         <div className="mb-6 text-center">
