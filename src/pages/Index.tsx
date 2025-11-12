@@ -7,10 +7,11 @@ const Index = () => {
   return (
     <div className="w-full min-h-screen">
       {/* Announcement Banner */}
-      <Banner className="bg-primary text-white py-3">
+      <Banner className="bg-primary text-white py-3 overflow-hidden">
         <div className="w-full">
-          <p className="flex justify-center text-sm font-medium">
-            <span className="flex items-center gap-2 flex-wrap justify-center">
+          {/* Desktop version - centered */}
+          <p className="hidden md:flex justify-center text-sm font-medium">
+            <span className="flex items-center gap-2">
               <span>Step 1: Fill out the onboarding form</span>
               <ArrowRight size={16} className="shrink-0" />
               <span>Step 2: Book your discovery call</span>
@@ -18,6 +19,26 @@ const Index = () => {
               <span>Step 3: Get your free growth playbook</span>
             </span>
           </p>
+          
+          {/* Mobile version - horizontal scrolling */}
+          <div className="md:hidden relative">
+            <div className="animate-marquee whitespace-nowrap inline-block">
+              <span className="inline-flex items-center gap-2 text-sm font-medium px-4">
+                <span>Step 1: Fill out the onboarding form</span>
+                <ArrowRight size={16} className="shrink-0" />
+                <span>Step 2: Book your discovery call</span>
+                <ArrowRight size={16} className="shrink-0" />
+                <span>Step 3: Get your free growth playbook</span>
+              </span>
+              <span className="inline-flex items-center gap-2 text-sm font-medium px-4">
+                <span>Step 1: Fill out the onboarding form</span>
+                <ArrowRight size={16} className="shrink-0" />
+                <span>Step 2: Book your discovery call</span>
+                <ArrowRight size={16} className="shrink-0" />
+                <span>Step 3: Get your free growth playbook</span>
+              </span>
+            </div>
+          </div>
         </div>
       </Banner>
       
