@@ -17,6 +17,8 @@ const step1Schema = z.object({
   email: z.string().trim().email("Invalid email address").max(255),
   brandName: z.string().trim().min(1, "Brand name is required").max(100),
   websiteLink: z.string().trim().max(255).optional(),
+  amazonStorefrontLink: z.string().trim().max(255).optional(),
+  asin: z.string().trim().max(100).optional(),
   sellingPlatform: z.string().min(1, "Please select where you sell"),
 });
 
@@ -44,6 +46,8 @@ export const OnboardingForm = () => {
     email: "",
     brandName: "",
     websiteLink: "",
+    amazonStorefrontLink: "",
+    asin: "",
     sellingPlatform: "",
     revenueRange: "",
     runsAds: "",
@@ -64,6 +68,8 @@ export const OnboardingForm = () => {
           email: formData.email,
           brandName: formData.brandName,
           websiteLink: formData.websiteLink,
+          amazonStorefrontLink: formData.amazonStorefrontLink,
+          asin: formData.asin,
           sellingPlatform: formData.sellingPlatform,
         });
       } else if (step === 2) {
@@ -120,7 +126,7 @@ export const OnboardingForm = () => {
   };
 
   return (
-    <div className="w-full max-w-xl mx-auto">
+    <div className="w-full max-w-4xl mx-auto">
       {/* Progress Indicator */}
       {currentStep <= totalSteps && (
         <div className="mb-6 text-center">
@@ -198,6 +204,26 @@ export const OnboardingForm = () => {
                     value={formData.websiteLink}
                     onChange={(e) => updateFormData("websiteLink", e.target.value)}
                     placeholder="Have one? (optional)"
+                  />
+                </div>
+
+                <div className="space-y-2 text-left">
+                  <Label htmlFor="amazonStorefrontLink" className="text-left">Amazon Storefront Link (optional)</Label>
+                  <Input
+                    id="amazonStorefrontLink"
+                    value={formData.amazonStorefrontLink}
+                    onChange={(e) => updateFormData("amazonStorefrontLink", e.target.value)}
+                    placeholder="Enter your Amazon storefront link (optional)"
+                  />
+                </div>
+
+                <div className="space-y-2 text-left">
+                  <Label htmlFor="asin" className="text-left">ASIN (optional)</Label>
+                  <Input
+                    id="asin"
+                    value={formData.asin}
+                    onChange={(e) => updateFormData("asin", e.target.value)}
+                    placeholder="Enter your ASIN (optional)"
                   />
                 </div>
 
