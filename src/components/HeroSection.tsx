@@ -77,47 +77,32 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
             </span>
           </h1>
 
-          {/* Dashboard Mockup */}
-          <div className="mt-12 mb-12 w-full max-w-[780px] mx-auto">
-            <div className="relative">
-              {/* Laptop frame */}
-              <div className="relative bg-[hsl(222,47%,18%)] rounded-2xl p-3 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.35)] ring-1 ring-black/10">
-                <div className="relative overflow-hidden rounded-lg bg-white shadow-inner">
-                  <img
-                    src={dashboardImage}
-                    alt="PPC Management Dashboard preview"
-                    className="block w-full h-auto"
+          {/* Dashboard Image */}
+          <div className="mt-6 mb-6 w-full max-w-[780px] mx-auto relative">
+            <img
+              src={dashboardImage}
+              alt="PPC Management Dashboard preview"
+              className="block w-full h-auto"
+            />
+            {/* Animated cursor */}
+            <div className="pointer-events-none absolute top-0 left-0 z-20 animate-cursor-path">
+              <div className="relative animate-cursor-click">
+                <span className="absolute left-1 top-1 block h-4 w-4 rounded-full border-2 border-primary opacity-0 animate-cursor-ripple" />
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-md">
+                  <path
+                    d="M5 3 L5 19 L9.5 14.5 L12 20.5 L14.5 19.5 L12 13.5 L18 13.5 Z"
+                    fill="white"
+                    stroke="black"
+                    strokeWidth="1.2"
+                    strokeLinejoin="round"
                   />
-
-                  {/* Animated cursor */}
-                  <div className="pointer-events-none absolute top-0 left-0 z-20 animate-cursor-path">
-                    <div className="relative animate-cursor-click">
-                      {/* Ripple */}
-                      <span className="absolute left-1 top-1 block h-4 w-4 rounded-full border-2 border-primary opacity-0 animate-cursor-ripple" />
-                      {/* Cursor SVG */}
-                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-md">
-                        <path
-                          d="M5 3 L5 19 L9.5 14.5 L12 20.5 L14.5 19.5 L12 13.5 L18 13.5 Z"
-                          fill="white"
-                          stroke="black"
-                          strokeWidth="1.2"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
+                </svg>
               </div>
-              {/* Laptop bottom stand */}
-              <div className="mx-auto h-2 w-[55%] rounded-b-xl bg-[hsl(222,47%,22%)] shadow-md" />
-              <div className="mx-auto h-1 w-[30%] rounded-b-md bg-black/10 blur-[2px]" />
-              {/* Soft outer glow / shadow */}
-              <div className="absolute -inset-6 -z-10 rounded-3xl bg-black/5 blur-2xl" />
             </div>
           </div>
 
           {/* Subtitle */}
-          <p className="mt-8 text-lg leading-relaxed text-muted-foreground max-w-2xl mx-auto font-light">
+          <p className="mt-4 text-lg leading-relaxed text-muted-foreground max-w-2xl mx-auto font-light">
             {subtitle}
           </p>
         </div>
