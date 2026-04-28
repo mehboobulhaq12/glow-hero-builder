@@ -60,7 +60,7 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
         ref={ref}
         {...props}
         className={cn(
-          "relative container mx-auto flex flex-col items-center justify-center text-center py-24 md:py-40 px-4 overflow-hidden bg-canvas-yellow",
+          "relative container mx-auto flex flex-col items-center justify-center text-center py-16 md:py-24 px-4 overflow-hidden",
           className
         )}
       >
@@ -78,27 +78,12 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
           </h1>
 
           {/* Dashboard Image */}
-          <div className="mt-6 mb-6 w-full max-w-[780px] mx-auto relative">
+          <div className="mt-4 mb-4 w-full max-w-[780px] mx-auto">
             <img
               src={dashboardImage}
               alt="PPC Management Dashboard preview"
               className="block w-full h-auto"
             />
-            {/* Animated cursor */}
-            <div className="pointer-events-none absolute top-0 left-0 z-20 animate-cursor-path">
-              <div className="relative animate-cursor-click">
-                <span className="absolute left-1 top-1 block h-4 w-4 rounded-full border-2 border-primary opacity-0 animate-cursor-ripple" />
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-md">
-                  <path
-                    d="M5 3 L5 19 L9.5 14.5 L12 20.5 L14.5 19.5 L12 13.5 L18 13.5 Z"
-                    fill="white"
-                    stroke="black"
-                    strokeWidth="1.2"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </div>
-            </div>
           </div>
 
           {/* Subtitle */}
