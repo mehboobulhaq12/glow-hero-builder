@@ -1,7 +1,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { motion, AnimatePresence } from "framer-motion";
 
 export interface HeroSectionProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title' | 'children'> {
   title: React.ReactNode;
@@ -27,14 +26,33 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
     ref
   ) => {
     const [textIndex, setTextIndex] = React.useState(0);
+    const [displayText, setDisplayText] = React.useState("");
+    const [isDeleting, setIsDeleting] = React.useState(false);
 
-    // Slide-up slot-machine rotation, 2.5s each, infinite loop
+    // Continuous typewriter animation
     React.useEffect(() => {
-      const interval = setInterval(() => {
+      const fullText = animatedTexts[textIndex];
+
+      const handleTyping = () => {
+        if (isDeleting) {
+          setDisplayText((prev) => prev.substring(0, prev.length - 1));
+        } else {
+          setDisplayText((prev) => fullText.substring(0, prev.length + 1));
+        }
+      };
+
+      const typingSpeed = isDeleting ? 50 : 100;
+      const typeInterval = setInterval(handleTyping, typingSpeed);
+
+      if (!isDeleting && displayText === fullText) {
+        setTimeout(() => setIsDeleting(true), 1500);
+      } else if (isDeleting && displayText === "") {
+        setIsDeleting(false);
         setTextIndex((prev) => (prev + 1) % animatedTexts.length);
-      }, 2500);
-      return () => clearInterval(interval);
-    }, [animatedTexts.length]);
+      }
+
+      return () => clearInterval(typeInterval);
+    }, [displayText, isDeleting, textIndex, animatedTexts]);
 
     return (
       <section
@@ -52,19 +70,9 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
           {/* Headline */}
           <h1 className="text-4xl font-medium tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl leading-tight">
             {title}
-            <span className="block mt-3 text-primary h-[1.2em] overflow-hidden relative">
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={textIndex}
-                  initial={{ y: "100%", opacity: 0 }}
-                  animate={{ y: "0%", opacity: 1 }}
-                  exit={{ y: "-100%", opacity: 0 }}
-                  transition={{ duration: 0.5, ease: "easeOut" }}
-                  className="block"
-                >
-                  {animatedTexts[textIndex]}
-                </motion.span>
-              </AnimatePresence>
+            <span className="block mt-3 text-primary">
+              {displayText}
+              <span className="animate-pulse">|</span>
             </span>
           </h1>
 
