@@ -1,5 +1,4 @@
 import { HeroSection } from "@/components/HeroSection";
-import { OnboardingForm } from "@/components/OnboardingForm";
 import { Banner } from "@/components/ui/banner";
 import { ArrowRight } from "lucide-react";
 
@@ -13,18 +12,18 @@ const Index = () => {
           <div className="relative">
             <div className="animate-marquee whitespace-nowrap inline-block">
               <span className="inline-flex items-center gap-2 text-sm font-medium px-4">
-                <span>Step 1: Fill out the onboarding form</span>
+                <span>Step 1: Download the Dashboard</span>
                 <ArrowRight size={16} className="shrink-0" />
-                <span>Step 2: Book your discovery call</span>
+                <span>Step 2: Signup Free</span>
                 <ArrowRight size={16} className="shrink-0" />
-                <span>Step 3: Get your free growth playbook</span>
+                <span>Step 3: Fix Your PPC This Week</span>
               </span>
               <span className="inline-flex items-center gap-2 text-sm font-medium px-4">
-                <span>Step 1: Fill out the onboarding form</span>
+                <span>Step 1: Download the Dashboard</span>
                 <ArrowRight size={16} className="shrink-0" />
-                <span>Step 2: Book your discovery call</span>
+                <span>Step 2: Signup Free</span>
                 <ArrowRight size={16} className="shrink-0" />
-                <span>Step 3: Get your free growth playbook</span>
+                <span>Step 3: Fix Your PPC This Week</span>
               </span>
             </div>
           </div>
@@ -35,19 +34,15 @@ const Index = () => {
       <HeroSection
         title={
           <>
-            What's the single thing stopping your <br /> Amazon{" "}
-            <span className="text-primary">growth?</span>
+            What's eating your Amazon{" "}
+            <span className="text-primary">PPC budget?</span>
           </>
         }
-        animatedTexts={["traffic", "conversion", "reviews", "growth"]}
-        subtitle="Tell us your product and one problem you're facing (traffic, conversion, reviews). We'll run a quick diagnostic and share 3 key findings + one fix you can apply this week."
-        infoBadgeText="42% average increase in conversion rate after fixing listing fundamentals."
-        ctaButtonText="Upgrade My Conversions"
-      >
-        <div className="mt-12">
-          <OnboardingForm />
-        </div>
-      </HeroSection>
+        animatedTexts={["wasted bids.", "high ACoS.", "dead keywords.", "manual guesswork."]}
+        subtitle="You're spending money on ads every single day, but you don't know which campaigns are profitable, which keywords are draining you, or why your ACoS keeps climbing. This free PPC Automation Dashboard gives you the exact system to see it all clearly and fix it fast."
+        infoBadgeText="Sellers using this dashboard have cut ACoS by 30%+ within the first 3 weeks."
+        ctaButtonText="Get Free PPC Dashboard"
+      />
       </div>
     </div>
   );
