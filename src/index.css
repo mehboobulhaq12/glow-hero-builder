@@ -111,7 +111,10 @@ All colors MUST be HSL.
   
   .bg-canvas-yellow {
     background-color: hsl(var(--background));
-    background-image: radial-gradient(hsl(var(--canvas-dot)) 1px, transparent 1px);
-    background-size: 20px 20px;
+    background-image:
+      radial-gradient(circle at top center, hsl(var(--primary) / 0.12), transparent 38%),
+      radial-gradient(circle, hsl(var(--canvas-dot) / 0.24) 1px, transparent 1.2px);
+    background-position: center top, left top;
+    background-size: 100% 100%, 18px 18px;
   }
 }

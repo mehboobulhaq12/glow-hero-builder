@@ -69,21 +69,23 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
 
         <div className="relative z-10 max-w-4xl">
           {/* Headline */}
-          <h1 className="text-4xl font-medium tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl leading-tight">
+          <h1 className="text-4xl font-medium tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl leading-[0.98] sm:leading-none">
             {title}
-            <span className="block mt-3 text-primary">
+            <span className="block mt-0 text-primary">
               {displayText}
               <span className="animate-pulse">|</span>
             </span>
           </h1>
 
           {/* Dashboard Image */}
-          <div className="mt-4 mb-4 w-full max-w-[780px] mx-auto">
-            <img
-              src={dashboardImage}
-              alt="PPC Management Dashboard preview"
-              className="block w-full h-auto"
-            />
+          <div className="mt-4 mb-4 w-full max-w-[860px] mx-auto">
+            <div className="aspect-[1.48/1] overflow-hidden rounded-[24px]">
+              <img
+                src={dashboardImage}
+                alt="PPC Management Dashboard preview"
+                className="block h-full w-full scale-[1.12] object-cover object-[center_62%]"
+              />
+            </div>
           </div>
 
           {/* Subtitle */}

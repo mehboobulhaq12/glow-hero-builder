@@ -4,7 +4,7 @@ import { ArrowRight } from "lucide-react";
 
 const Index = () => {
   return (
-    <div className="w-full min-h-screen">
+    <div className="w-full min-h-screen bg-canvas-yellow">
       {/* Announcement Banner */}
       <Banner className="bg-primary text-white py-3 overflow-hidden">
         <div className="w-full">
