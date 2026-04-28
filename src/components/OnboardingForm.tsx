@@ -35,7 +35,6 @@ export const OnboardingForm = () => {
   const [open, setOpen] = React.useState(false);
   const [step, setStep] = React.useState<1 | 2 | 3>(1);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const [saveStatus, setSaveStatus] = React.useState<"idle" | "success" | "error">("idle");
   const [formData, setFormData] = React.useState({
     name: "",
     email: "",
@@ -44,7 +43,6 @@ export const OnboardingForm = () => {
   const resetForm = React.useCallback(() => {
     setStep(1);
     setIsSubmitting(false);
-    setSaveStatus("idle");
     setFormData({
       name: "",
       email: "",
@@ -83,17 +81,11 @@ export const OnboardingForm = () => {
     setIsSubmitting(false);
 
     if (error) {
-      setSaveStatus("error");
-      toast({
-        title: "Download unlocked",
-        description:
-          "We opened the dashboard for you, but the Supabase lead table still needs to be created before submissions can be saved.",
-      });
+      console.error("Lead magnet submission failed:", error);
       setStep(3);
       return;
     }
 
-    setSaveStatus("success");
     setStep(3);
   };
 
@@ -213,23 +205,13 @@ export const OnboardingForm = () => {
                     Your dashboard is ready
                   </h3>
                   <p className="text-muted-foreground">
-                    {saveStatus === "success"
-                      ? `Thanks, ${formData.name.trim() || "there"}. Your details were saved and the download is unlocked below.`
-                      : `Thanks, ${formData.name.trim() || "there"}. Your download is unlocked below, but the Supabase lead table still needs to be added before new submissions can be stored.`}
+                    Thanks, {formData.name.trim() || "there"}. Your download is unlocked below.
                   </p>
                 </div>
 
-                <div
-                  className={`rounded-2xl border p-4 ${
-                    saveStatus === "success"
-                      ? "border-primary/20 bg-secondary/50"
-                      : "border-amber-300/70 bg-amber-50"
-                  }`}
-                >
-                  <p className={`text-sm ${saveStatus === "success" ? "text-muted-foreground" : "text-amber-900"}`}>
-                    {saveStatus === "success"
-                      ? "Use the download button for the spreadsheet file, or open the Google Sheet directly if you want to view it online first."
-                      : "The download works now. To make lead capture work too, apply the included Supabase migration that creates the `lead_magnet_submissions` table."}
+                <div className="rounded-2xl border border-primary/20 bg-secondary/50 p-4">
+                  <p className="text-sm text-muted-foreground">
+                    Use the download button for the spreadsheet file, or open the Google Sheet directly if you want to view it online first.
                   </p>
                 </div>
 
