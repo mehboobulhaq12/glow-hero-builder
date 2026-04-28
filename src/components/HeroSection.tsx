@@ -78,10 +78,10 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
           </h1>
 
           {/* Dashboard Mockup */}
-          <div className="mt-12 mb-12 w-full max-w-[560px] mx-auto">
+          <div className="mt-12 mb-12 w-full max-w-[780px] mx-auto">
             <div className="relative">
               {/* Laptop frame */}
-              <div className="relative bg-[hsl(222,47%,18%)] rounded-xl p-2 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.35)] ring-1 ring-black/10">
+              <div className="relative bg-[hsl(222,47%,18%)] rounded-2xl p-3 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.35)] ring-1 ring-black/10">
                 <div className="relative overflow-hidden rounded-lg bg-white shadow-inner">
                   <img
                     src={dashboardImage}
