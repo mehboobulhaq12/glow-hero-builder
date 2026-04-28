@@ -90,16 +90,10 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
                   />
 
                   {/* Animated cursor */}
-                  <div
-                    className="pointer-events-none absolute top-0 left-0 z-20"
-                    style={{ animation: "cursor-path 6s ease-in-out infinite" }}
-                  >
-                    <div className="relative" style={{ animation: "cursor-click 6s ease-in-out infinite" }}>
+                  <div className="pointer-events-none absolute top-0 left-0 z-20 animate-cursor-path">
+                    <div className="relative animate-cursor-click">
                       {/* Ripple */}
-                      <span
-                        className="absolute left-1 top-1 block h-4 w-4 rounded-full border-2 border-primary opacity-0"
-                        style={{ animation: "cursor-ripple 6s ease-in-out infinite" }}
-                      />
+                      <span className="absolute left-1 top-1 block h-4 w-4 rounded-full border-2 border-primary opacity-0 animate-cursor-ripple" />
                       {/* Cursor SVG */}
                       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-md">
                         <path
