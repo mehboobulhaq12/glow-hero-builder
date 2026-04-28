@@ -1,100 +1,63 @@
 import * as React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { z } from "zod";
+import { Download, Mail, UserRound } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { UserRound, BarChart2, AlertCircle, Target } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { z } from "zod";
+import { supabase } from "@/integrations/supabase/client";
 
-// Validation schemas for each step
-const step1Schema = z.object({
-  name: z.string().trim().min(1, "Name is required").max(100),
-  email: z.string().trim().email("Invalid email address").max(255),
-  brandName: z.string().trim().min(1, "Brand name is required").max(100),
-  websiteLink: z.string().trim().max(255).optional(),
-  amazonStorefrontLink: z.string().trim().max(255).optional(),
-  asin: z.string().trim().max(100).optional(),
-  sellingPlatform: z.string().min(1, "Please select where you sell"),
-});
+const downloadUrl =
+  "https://docs.google.com/spreadsheets/d/1Bh0UtM5LpngYhoSqWLLTtwtuRxwu7uzQ9mtndkKYaMI/export?format=xlsx&gid=2010794890";
+const sheetUrl =
+  "https://docs.google.com/spreadsheets/d/1Bh0UtM5LpngYhoSqWLLTtwtuRxwu7uzQ9mtndkKYaMI/edit?gid=2010794890#gid=2010794890";
 
-const step2Schema = z.object({
-  revenueRange: z.string().min(1, "Please select your revenue range"),
-  runsAds: z.string().min(1, "Please select if you run ads"),
-  sellingDuration: z.string().min(1, "Please select how long you've been selling"),
-});
-
-const step3Schema = z.object({
-  mainProblem: z.string().min(1, "Please select your main problem"),
-  problemDescription: z.string().trim().min(1, "Please describe your issue").max(500),
-});
-
-const step4Schema = z.object({
-  desiredOutcome: z.string().min(1, "Please select your desired outcome"),
-  asinLink: z.string().trim().max(255).optional(),
-});
+const stepSchemas = {
+  1: z.object({
+    name: z.string().trim().min(2, "Please enter your name").max(100),
+  }),
+  2: z.object({
+    email: z.string().trim().email("Please enter a valid email address").max(255),
+  }),
+} as const;
 
 export const OnboardingForm = () => {
   const { toast } = useToast();
-  const [currentStep, setCurrentStep] = React.useState(1);
+  const [open, setOpen] = React.useState(false);
+  const [step, setStep] = React.useState<1 | 2 | 3>(1);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [formData, setFormData] = React.useState({
     name: "",
     email: "",
-    brandName: "",
-    websiteLink: "",
-    amazonStorefrontLink: "",
-    asin: "",
-    sellingPlatform: "",
-    revenueRange: "",
-    runsAds: "",
-    sellingDuration: "",
-    mainProblem: "",
-    problemDescription: "",
-    desiredOutcome: "",
-    asinLink: "",
   });
 
-  const totalSteps = 4;
+  const resetForm = React.useCallback(() => {
+    setStep(1);
+    setIsSubmitting(false);
+    setFormData({
+      name: "",
+      email: "",
+    });
+  }, []);
 
-  const validateStep = (step: number): boolean => {
+  const validateStep = (currentStep: 1 | 2) => {
     try {
-      if (step === 1) {
-        step1Schema.parse({
-          name: formData.name,
-          email: formData.email,
-          brandName: formData.brandName,
-          websiteLink: formData.websiteLink,
-          amazonStorefrontLink: formData.amazonStorefrontLink,
-          asin: formData.asin,
-          sellingPlatform: formData.sellingPlatform,
-        });
-      } else if (step === 2) {
-        step2Schema.parse({
-          revenueRange: formData.revenueRange,
-          runsAds: formData.runsAds,
-          sellingDuration: formData.sellingDuration,
-        });
-      } else if (step === 3) {
-        step3Schema.parse({
-          mainProblem: formData.mainProblem,
-          problemDescription: formData.problemDescription,
-        });
-      } else if (step === 4) {
-        step4Schema.parse({
-          desiredOutcome: formData.desiredOutcome,
-          asinLink: formData.asinLink,
-        });
-      }
+      stepSchemas[currentStep].parse(formData);
       return true;
     } catch (error) {
       if (error instanceof z.ZodError) {
         toast({
           variant: "destructive",
-          title: "Validation Error",
+          title: "Missing information",
           description: error.errors[0].message,
         });
       }
@@ -102,397 +65,177 @@ export const OnboardingForm = () => {
     }
   };
 
-  const handleNext = () => {
-    if (currentStep < totalSteps) {
-      if (validateStep(currentStep)) {
-        setCurrentStep(currentStep + 1);
-      }
-    } else {
-      if (validateStep(currentStep)) {
-        // Submit form
-        setCurrentStep(5); // Thank you screen
-      }
+  const handleSubmit = async () => {
+    if (!validateStep(2)) {
+      return;
     }
-  };
 
-  const handleBack = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
+    setIsSubmitting(true);
+
+    const { error } = await supabase.from("lead_magnet_submissions").insert({
+      name: formData.name.trim(),
+      email: formData.email.trim().toLowerCase(),
+      source: "ppc-dashboard-landing",
+    });
+
+    setIsSubmitting(false);
+
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "Submission failed",
+        description: "We couldn't save your details yet. Please try again in a moment.",
+      });
+      return;
     }
-  };
 
-  const updateFormData = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    setStep(3);
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto">
-      {/* Progress Indicator */}
-      {currentStep <= totalSteps && (
-        <div className="mb-6 text-center">
-          <div className="flex items-center justify-center gap-2 mb-2">
-            {[...Array(totalSteps)].map((_, index) => (
-              <div
-                key={index}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  index + 1 === currentStep
-                    ? "w-8 bg-primary"
-                    : index + 1 < currentStep
-                    ? "w-2 bg-primary"
-                    : "w-2 bg-muted"
-                }`}
-              />
-            ))}
+    <Dialog
+      open={open}
+      onOpenChange={(nextOpen) => {
+        setOpen(nextOpen);
+        if (!nextOpen) {
+          resetForm();
+        }
+      }}
+    >
+      <DialogTrigger asChild>
+        <Button
+          size="lg"
+          className="mt-6 px-10 py-6 text-lg bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-xl shadow-md transition-all hover:scale-105"
+        >
+          Get Free PPC Dashboard
+        </Button>
+      </DialogTrigger>
+
+      <DialogContent className="border-primary/30 bg-background p-0 shadow-2xl sm:max-w-[560px]">
+        <div className="overflow-hidden rounded-lg">
+          <div className="bg-primary px-6 py-4 text-primary-foreground">
+            <p className="text-sm font-medium uppercase tracking-[0.22em]">Free Download</p>
+            <DialogHeader className="mt-2 space-y-2 text-left">
+              <DialogTitle className="text-2xl font-medium">
+                Grab your PPC dashboard
+              </DialogTitle>
+              <DialogDescription className="text-primary-foreground/85">
+                Enter your details, save the lead in Supabase, and unlock the dashboard instantly.
+              </DialogDescription>
+            </DialogHeader>
           </div>
-          <p className="text-sm text-muted-foreground">
-            Step {currentStep} of {totalSteps}
-          </p>
-        </div>
-      )}
-      <AnimatePresence mode="wait">
-        {currentStep === 1 && (
-          <motion.div
-            key="step1"
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Card className="bg-card/60 backdrop-blur-md border border-primary shadow-lg">
-              <CardHeader className="text-left">
-                <CardTitle className="flex items-center gap-3 text-2xl">
-                  <UserRound className="w-6 h-6 text-primary" />
-                  Seller Information
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2 text-left">
-                  <Label htmlFor="name" className="text-left">Your Name</Label>
-                  <Input
-                    id="name"
-                    value={formData.name}
-                    onChange={(e) => updateFormData("name", e.target.value)}
-                    placeholder="Enter your name"
+
+          <div className="space-y-6 px-6 py-6">
+            {step !== 3 && (
+              <div className="flex items-center gap-2">
+                {[1, 2].map((item) => (
+                  <div
+                    key={item}
+                    className={`h-2 rounded-full transition-all duration-300 ${
+                      item === step ? "w-10 bg-primary" : item < step ? "w-3 bg-primary/60" : "w-3 bg-muted"
+                    }`}
                   />
+                ))}
+              </div>
+            )}
+
+            {step === 1 && (
+              <div className="space-y-5">
+                <div className="space-y-2">
+                  <Label htmlFor="lead-name">Your name</Label>
+                  <div className="relative">
+                    <UserRound className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                      id="lead-name"
+                      value={formData.name}
+                      onChange={(event) =>
+                        setFormData((prev) => ({ ...prev, name: event.target.value }))
+                      }
+                      className="h-12 border-primary/25 pl-10"
+                      placeholder="Enter your full name"
+                    />
+                  </div>
                 </div>
 
-                <div className="space-y-2 text-left">
-                  <Label htmlFor="email" className="text-left">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => updateFormData("email", e.target.value)}
-                    placeholder="Enter your email"
-                  />
-                </div>
-
-                <div className="space-y-2 text-left">
-                  <Label htmlFor="brandName" className="text-left">Brand Name</Label>
-                  <Input
-                    id="brandName"
-                    value={formData.brandName}
-                    onChange={(e) => updateFormData("brandName", e.target.value)}
-                    placeholder="Enter your brand name"
-                  />
-                </div>
-
-                <div className="space-y-2 text-left">
-                  <Label htmlFor="websiteLink" className="text-left">Website Link</Label>
-                  <Input
-                    id="websiteLink"
-                    value={formData.websiteLink}
-                    onChange={(e) => updateFormData("websiteLink", e.target.value)}
-                    placeholder="Have one? (optional)"
-                  />
-                </div>
-
-                <div className="space-y-2 text-left">
-                  <Label htmlFor="amazonStorefrontLink" className="text-left">Amazon Storefront Link (optional)</Label>
-                  <Input
-                    id="amazonStorefrontLink"
-                    value={formData.amazonStorefrontLink}
-                    onChange={(e) => updateFormData("amazonStorefrontLink", e.target.value)}
-                    placeholder="Enter your Amazon storefront link (optional)"
-                  />
-                </div>
-
-                <div className="space-y-2 text-left">
-                  <Label htmlFor="asin" className="text-left">ASIN (optional)</Label>
-                  <Input
-                    id="asin"
-                    value={formData.asin}
-                    onChange={(e) => updateFormData("asin", e.target.value)}
-                    placeholder="Enter your ASIN (optional)"
-                  />
-                </div>
-
-                <div className="space-y-2 text-left">
-                  <Label htmlFor="sellingPlatform" className="text-left">Where do you sell?</Label>
-                  <Select value={formData.sellingPlatform} onValueChange={(value) => updateFormData("sellingPlatform", value)}>
-                    <SelectTrigger id="sellingPlatform">
-                      <SelectValue placeholder="Select platform" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="amazon">Amazon</SelectItem>
-                      <SelectItem value="instagram">Instagram</SelectItem>
-                      <SelectItem value="facebook">Facebook</SelectItem>
-                      <SelectItem value="website">Website</SelectItem>
-                      <SelectItem value="others">Others</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="flex justify-end pt-4">
-                  <Button onClick={handleNext} className="bg-primary hover:bg-primary/90 text-primary-foreground">
-                    Next →
+                <div className="flex justify-end">
+                  <Button
+                    onClick={() => {
+                      if (validateStep(1)) {
+                        setStep(2);
+                      }
+                    }}
+                  >
+                    Continue
                   </Button>
                 </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        )}
+              </div>
+            )}
 
-        {currentStep === 2 && (
-          <motion.div
-            key="step2"
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Card className="bg-card/60 backdrop-blur-md border border-primary shadow-lg">
-              <CardHeader className="text-left">
-                <CardTitle className="flex items-center gap-3 text-2xl">
-                  <BarChart2 className="w-6 h-6 text-primary" />
-                  Current Amazon Status
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="space-y-3 text-left">
-                  <Label className="text-left">What is your current average monthly revenue range?</Label>
-                  <RadioGroup value={formData.revenueRange} onValueChange={(value) => updateFormData("revenueRange", value)}>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="below-10k" id="below-10k" />
-                      <Label htmlFor="below-10k" className="font-normal cursor-pointer">Below $10k</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="10k-30k" id="10k-30k" />
-                      <Label htmlFor="10k-30k" className="font-normal cursor-pointer">$10k – $30k</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="30k-80k" id="30k-80k" />
-                      <Label htmlFor="30k-80k" className="font-normal cursor-pointer">$30k – $80k</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="80k-plus" id="80k-plus" />
-                      <Label htmlFor="80k-plus" className="font-normal cursor-pointer">$80k+</Label>
-                    </div>
-                  </RadioGroup>
+            {step === 2 && (
+              <div className="space-y-5">
+                <div className="space-y-2">
+                  <Label htmlFor="lead-email">Email address</Label>
+                  <div className="relative">
+                    <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                      id="lead-email"
+                      type="email"
+                      value={formData.email}
+                      onChange={(event) =>
+                        setFormData((prev) => ({ ...prev, email: event.target.value }))
+                      }
+                      className="h-12 border-primary/25 pl-10"
+                      placeholder="you@example.com"
+                    />
+                  </div>
                 </div>
 
-                <div className="space-y-3 text-left">
-                  <Label className="text-left">Do you currently run ads?</Label>
-                  <RadioGroup value={formData.runsAds} onValueChange={(value) => updateFormData("runsAds", value)}>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="yes" id="ads-yes" />
-                      <Label htmlFor="ads-yes" className="font-normal cursor-pointer">Yes</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="no" id="ads-no" />
-                      <Label htmlFor="ads-no" className="font-normal cursor-pointer">No</Label>
-                    </div>
-                  </RadioGroup>
-                </div>
-
-                <div className="space-y-3 text-left">
-                  <Label className="text-left">How long have you been selling on Amazon?</Label>
-                  <RadioGroup value={formData.sellingDuration} onValueChange={(value) => updateFormData("sellingDuration", value)}>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="less-6mo" id="less-6mo" />
-                      <Label htmlFor="less-6mo" className="font-normal cursor-pointer">Less than 6 months</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="6-12mo" id="6-12mo" />
-                      <Label htmlFor="6-12mo" className="font-normal cursor-pointer">6–12 months</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="1-3yr" id="1-3yr" />
-                      <Label htmlFor="1-3yr" className="font-normal cursor-pointer">1–3 years</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="3plus" id="3plus" />
-                      <Label htmlFor="3plus" className="font-normal cursor-pointer">3+ years</Label>
-                    </div>
-                  </RadioGroup>
-                </div>
-
-                <div className="flex justify-between pt-4">
-                  <Button onClick={handleBack} variant="outline">
-                    ← Back
+                <div className="flex items-center justify-between gap-3">
+                  <Button variant="outline" onClick={() => setStep(1)}>
+                    Back
                   </Button>
-                  <Button onClick={handleNext} className="bg-primary hover:bg-primary/90 text-primary-foreground">
-                    Next →
+                  <Button onClick={handleSubmit} disabled={isSubmitting}>
+                    {isSubmitting ? "Saving..." : "Unlock Dashboard"}
                   </Button>
                 </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        )}
+              </div>
+            )}
 
-        {currentStep === 3 && (
-          <motion.div
-            key="step3"
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Card className="bg-card/60 backdrop-blur-md border border-primary shadow-lg">
-              <CardHeader className="text-left">
-                <CardTitle className="flex items-center gap-3 text-2xl">
-                  <AlertCircle className="w-6 h-6 text-primary" />
-                  What's Your Biggest Bottleneck?
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2 text-left">
-                  <Label htmlFor="mainProblem" className="text-left">What's the #1 problem hurting your growth?</Label>
-                  <Select value={formData.mainProblem} onValueChange={(value) => updateFormData("mainProblem", value)}>
-                    <SelectTrigger id="mainProblem">
-                      <SelectValue placeholder="Select your main problem" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="traffic">Traffic</SelectItem>
-                      <SelectItem value="conversion">Conversion</SelectItem>
-                      <SelectItem value="reviews">Reviews</SelectItem>
-                      <SelectItem value="acos">ACOS / Wasted Ad Spend</SelectItem>
-                      <SelectItem value="listing">Listing not performing</SelectItem>
-                      <SelectItem value="other">Something else</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2 text-left">
-                  <Label htmlFor="problemDescription" className="text-left">Short note: Describe this issue in 1–2 lines</Label>
-                  <Textarea
-                    id="problemDescription"
-                    value={formData.problemDescription}
-                    onChange={(e) => updateFormData("problemDescription", e.target.value)}
-                    placeholder="Briefly describe your issue..."
-                    rows={3}
-                  />
-                </div>
-
-                <div className="flex justify-between pt-4">
-                  <Button onClick={handleBack} variant="outline">
-                    ← Back
-                  </Button>
-                  <Button onClick={handleNext} className="bg-primary hover:bg-primary/90 text-primary-foreground">
-                    Next →
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        )}
-
-        {currentStep === 4 && (
-          <motion.div
-            key="step4"
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Card className="bg-card/60 backdrop-blur-md border border-primary shadow-lg">
-              <CardHeader className="text-left">
-                <CardTitle className="flex items-center gap-3 text-2xl">
-                  <Target className="w-6 h-6 text-primary" />
-                  What Result Do You Want Next?
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-3 text-left">
-                  <Label className="text-left">What is the outcome that matters most to you right now?</Label>
-                  <RadioGroup value={formData.desiredOutcome} onValueChange={(value) => updateFormData("desiredOutcome", value)}>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="sales-velocity" id="sales-velocity" />
-                      <Label htmlFor="sales-velocity" className="font-normal cursor-pointer">More sales velocity</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="lower-acos" id="lower-acos" />
-                      <Label htmlFor="lower-acos" className="font-normal cursor-pointer">Lower ACOS</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="profit-margin" id="profit-margin" />
-                      <Label htmlFor="profit-margin" className="font-normal cursor-pointer">Higher profit margin</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="listing-conversion" id="listing-conversion" />
-                      <Label htmlFor="listing-conversion" className="font-normal cursor-pointer">Better listing conversion</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="scaling" id="scaling" />
-                      <Label htmlFor="scaling" className="font-normal cursor-pointer">Scaling stable — not spikes</Label>
-                    </div>
-                  </RadioGroup>
-                </div>
-
-                <div className="space-y-2 text-left">
-                  <Label htmlFor="asinLink" className="text-left">Optional ASIN or Amazon product link</Label>
-                  <Input
-                    id="asinLink"
-                    value={formData.asinLink}
-                    onChange={(e) => updateFormData("asinLink", e.target.value)}
-                    placeholder="Enter ASIN or product link (optional)"
-                  />
-                </div>
-
-                <div className="flex justify-between pt-4">
-                  <Button onClick={handleBack} variant="outline">
-                    ← Back
-                  </Button>
-                  <Button onClick={handleNext} className="bg-primary hover:bg-primary/90 text-primary-foreground">
-                    Submit
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        )}
-
-        {currentStep === 5 && (
-          <motion.div
-            key="thankyou"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4 }}
-          >
-            <Card className="bg-card/60 backdrop-blur-md border border-primary shadow-lg text-center">
-              <CardContent className="pt-12 pb-12 space-y-6">
-                <div className="space-y-3">
-                  <h2 className="text-3xl font-medium text-foreground">
-                    Thank you — your form is submitted.
-                  </h2>
-                  <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-                    We'll review your information and send your initial diagnostic + next steps soon. No pitch — only clarity on what to fix first.
+            {step === 3 && (
+              <div className="space-y-5 text-left">
+                <div className="space-y-2">
+                  <h3 className="text-2xl font-medium text-foreground">
+                    Your dashboard is ready
+                  </h3>
+                  <p className="text-muted-foreground">
+                    Thanks, {formData.name.trim() || "there"}. Your details were saved and the download is unlocked below.
                   </p>
                 </div>
-                <Button 
-                  size="lg" 
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground mt-4"
-                  asChild
-                >
-                  <a href="https://calendar.notion.so/meet/murtazahamza/kwel3pyw" target="_blank" rel="noopener noreferrer">
-                    You can now book your call
-                  </a>
-                </Button>
-              </CardContent>
-            </Card>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+
+                <div className="rounded-2xl border border-primary/20 bg-secondary/50 p-4">
+                  <p className="text-sm text-muted-foreground">
+                    Use the download button for the spreadsheet file, or open the Google Sheet directly if you want to view it online first.
+                  </p>
+                </div>
+
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <Button size="lg" className="sm:flex-1" asChild>
+                    <a href={downloadUrl} target="_blank" rel="noopener noreferrer">
+                      <Download className="h-4 w-4" />
+                      Download PPC Dashboard
+                    </a>
+                  </Button>
+                  <Button size="lg" variant="outline" className="sm:flex-1" asChild>
+                    <a href={sheetUrl} target="_blank" rel="noopener noreferrer">
+                      Open Google Sheet
+                    </a>
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };

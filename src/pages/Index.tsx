@@ -1,4 +1,5 @@
 import { HeroSection } from "@/components/HeroSection";
+import { OnboardingForm } from "@/components/OnboardingForm";
 import { Banner } from "@/components/ui/banner";
 import { ArrowRight } from "lucide-react";
 
@@ -41,6 +42,7 @@ const Index = () => {
         subtitle="You're spending money on ads every single day, but you don't know which campaigns are profitable, which keywords are draining you, or why your ACoS keeps climbing. This free PPC Automation Dashboard gives you the exact system to see it all clearly and fix it fast."
         infoBadgeText="Sellers using this dashboard have cut ACoS by 30%+ within the first 3 weeks."
         ctaButtonText="Get Free PPC Dashboard"
+        cta={<OnboardingForm />}
       />
     </div>
   );

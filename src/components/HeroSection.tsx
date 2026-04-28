@@ -9,6 +9,7 @@ export interface HeroSectionProps extends Omit<React.HTMLAttributes<HTMLDivEleme
   subtitle: string;
   infoBadgeText: string;
   ctaButtonText: string;
+  cta?: React.ReactNode;
   children?: React.ReactNode;
 }
 
@@ -21,6 +22,7 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
       subtitle,
       infoBadgeText,
       ctaButtonText,
+      cta,
       children,
       ...props
     },
@@ -100,15 +102,17 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
         </div>
 
         {/* CTA */}
-        <Button
-          size="lg"
-          className="mt-6 px-10 py-6 text-lg bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-xl shadow-md transition-all hover:scale-105"
-          asChild
-        >
-          <a href="https://calendar.notion.so/meet/murtazahamza/kwel3pyw" target="_blank" rel="noopener noreferrer">
-            {ctaButtonText}
-          </a>
-        </Button>
+        {cta ?? (
+          <Button
+            size="lg"
+            className="mt-6 px-10 py-6 text-lg bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-xl shadow-md transition-all hover:scale-105"
+            asChild
+          >
+            <a href="https://calendar.notion.so/meet/murtazahamza/kwel3pyw" target="_blank" rel="noopener noreferrer">
+              {ctaButtonText}
+            </a>
+          </Button>
+        )}
 
         {/* Multi-step Onboarding Form */}
         {children}
