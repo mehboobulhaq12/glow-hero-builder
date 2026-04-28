@@ -30,7 +30,6 @@ const Index = () => {
         </div>
       </Banner>
       
-      <div className="bg-canvas-yellow">
       <HeroSection
         title={
           <>
@@ -43,7 +42,6 @@ const Index = () => {
         infoBadgeText="Sellers using this dashboard have cut ACoS by 30%+ within the first 3 weeks."
         ctaButtonText="Get Free PPC Dashboard"
       />
-      </div>
     </div>
   );
 };
