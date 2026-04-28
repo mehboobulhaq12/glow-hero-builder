@@ -69,7 +69,7 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
         {/* Top Yellow Glow - Animated */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[90%] h-60 bg-gradient-to-b from-primary/60 via-primary/20 to-transparent blur-3xl rounded-full pointer-events-none animate-pulse"></div>
 
-        <div className="relative z-10 max-w-4xl">
+        <div className="relative z-10 max-w-5xl">
           {/* Headline */}
           <h1 className="text-4xl font-medium tracking-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl leading-[0.98] sm:leading-none">
             {title}
@@ -79,21 +79,21 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
             </span>
           </h1>
 
+          {/* Subtitle */}
+          <p className="mt-6 text-lg leading-relaxed text-muted-foreground max-w-3xl mx-auto font-light md:text-xl">
+            {subtitle}
+          </p>
+
           {/* Dashboard Image */}
-          <div className="mt-4 mb-4 w-full max-w-[860px] mx-auto">
-            <div className="aspect-[1.48/1] overflow-hidden rounded-[24px]">
+          <div className="mt-10 mb-2 w-full max-w-[980px] mx-auto md:mt-12">
+            <div className="overflow-hidden rounded-[24px]">
               <img
                 src={dashboardImage}
                 alt="PPC Management Dashboard preview"
-                className="block h-full w-full scale-[1.12] object-cover object-[center_62%]"
+                className="block w-full h-auto"
               />
             </div>
           </div>
-
-          {/* Subtitle */}
-          <p className="mt-4 text-lg leading-relaxed text-muted-foreground max-w-2xl mx-auto font-light">
-            {subtitle}
-          </p>
         </div>
 
         {/* Badge */}
