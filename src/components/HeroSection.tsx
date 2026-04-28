@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import dashboardImage from "@/assets/ppc-dashboard.png";
+import dashboardImage from "@/assets/ppc-dashboard-cropped.png";
 
 export interface HeroSectionProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'title' | 'children'> {
   title: React.ReactNode;
@@ -85,8 +85,8 @@ const HeroSection = React.forwardRef<HTMLDivElement, HeroSectionProps>(
           </p>
 
           {/* Dashboard Image */}
-          <div className="mt-10 mb-2 w-full max-w-[980px] mx-auto md:mt-12">
-            <div className="overflow-hidden rounded-[24px]">
+          <div className="mt-8 mb-1 w-full max-w-[940px] mx-auto md:mt-10">
+            <div className="overflow-hidden rounded-[22px]">
               <img
                 src={dashboardImage}
                 alt="PPC Management Dashboard preview"
